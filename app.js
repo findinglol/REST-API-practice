@@ -21,8 +21,38 @@ app.get("/", (req, res) => {
 
 app.get("/articles", (req, res) => {
     Article.find((err, foundArticles) => {
-        res.send(foundArticles);
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(foundArticles);
+        }
     });
 });
+
+app.post("/articles", (req, res) => {
+    // console.log(req.body.title);
+    // console.log(req.body.content);
+    const newArticle = new Article({
+        title: req.body.title,
+        content: req.body.content
+    });
+    newArticle.save((err) => {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send("Succesfully added to the database");
+        }
+    });
+});
+
+app.delete("/articles", (req, res) => {
+    Article.deleteMany((err) => {
+        if (err) {
+            res.send(err);
+        } else {
+            res.send("Successfully Deleted all the articles");
+        }
+    })
+})
 
 app.listen(3000, () => { console.log('Server started on Port Number 3000') });
